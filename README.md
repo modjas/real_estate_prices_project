@@ -1,1 +1,3 @@
-# real_estate_prices_project
+Predicting apartment prices in Finland.
+
+Work in progress.
