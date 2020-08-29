@@ -5,7 +5,7 @@ import numpy as np
 
 st.title('Predict the price of your apartment')
 
-pipeline = joblib.load('test.pkl')
+pipeline = joblib.load('lgbm_pipeline.pkl')
 
 house_type = st.selectbox("Choose apartment type: ", ['kt', 'rt', 'ok'])
 sqm = st.slider("Choose apartment size: ", min_value=1, max_value=250, value=50, step=1)
@@ -13,7 +13,7 @@ year_built = st.slider("Choose year built: ", min_value=1850, max_value=2020, va
 elevator = st.selectbox("Choose elevator: ", ['on', 'ei'])
 condition = st.selectbox("Choose condition: ", ['hyvä', 'tyyd.', 'huono'])
 plot_ownership = st.selectbox("Choose plot ownership: ", ['oma', 'vuokra'])
-postal_code = st.text_input("Set postal code: ")
+postal_code = st.text_input("Set postal code: ", value='02500')
 floors = st.slider("Choose total floor count: ", min_value=1, max_value=50, value=1, step=1)
 current_floor = st.slider("Choose apartment floor number: ", min_value=1, max_value=50, value=1, step=1)
 floor_ratio = current_floor/floors

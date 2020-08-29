@@ -59,8 +59,6 @@ def download_apartment_data(filename='apartment_prices.csv'):
 
     postal_codes = postal_codes_helsinki + postal_codes_espoo + postal_codes_vantaa
 
-    postal_codes = ['00100']
-
     #Loop over postal codes and scrape data
     count = 0
     for postal_code in postal_codes:
@@ -81,7 +79,7 @@ def download_apartment_data(filename='apartment_prices.csv'):
         df[column] = pd.to_numeric(df[column])
 
     #Outputting data to .csv file in order to save data and avoid the need to pull data again
-    df.to_csv(filename)
+    df.to_csv(filename, index=False)
 
 def parse_floor(row):
     '''

@@ -10,18 +10,6 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import cross_val_score, RandomizedSearchCV
 from lightgbm import LGBMRegressor
 
-filename = './apartment_prices.csv'
-
-if not os.path.isfile(filename):
-    red.download_apartment_data(filename=filename)
-
-df = pd.read_csv(filename)
-
-df = red.preprocess_data(df)
-
-features_train, features_test, labels_train, labels_test = red.load_train_test(df)
-
-
 def run_train_test_lgbm():
     lgbm_pipeline = red.lgbm_pipeline()
 
@@ -53,26 +41,41 @@ def run_train_test_lgbm():
 
     joblib.dump(lgbm_pipeline, 'lgbm_pipeline.pkl')
 
+if __name__ == '__main__':
 
-#run_train_test_lgbm()
-pipeline = joblib.load('lgbm_pipeline.pkl')
+    filename = './apartment_prices.csv'
 
-known_apts = {'house_type' : ['kt', 'rt', 'rt'],
-        'sqm': [42, 75, 115],
-        'year_built': [1927, 2019, 1991],
-        'elevator': ['on', 'ei', 'ei'],
-        'condition': ['hyvä', 'hyvä', 'tyyd.'],
-        'plot_ownership':['oma', 'vuokra', 'oma'],
-        'postal_code':['00100', '02740', '00740'],
-        'floors':[7, 2, 2],
-        'current_floor':[3, 2, 2],
-        'floor_ratio':[3/7, 1, 1]}
-known_apts_names = ['mathias', 'harry', 'phki']
+    if not os.path.isfile(filename):
+        red.download_apartment_data(filename=filename)
 
-known_apartments = pd.DataFrame.from_dict(known_apts)
+    df = pd.read_csv(filename, dtype={'postal_code': np.object})
+
+    df = red.preprocess_data(df)
+
+    features_train, features_test, labels_train, labels_test = red.load_train_test(df)
+
+    run_train_test_lgbm()
+    pipeline = joblib.load('lgbm_pipeline.pkl')
+
+    known_apts = {'house_type' : ['kt', 'rt', 'rt'],
+            'sqm': [42, 75, 115],
+            'year_built': [1927, 2019, 1991],
+            'elevator': ['on', 'ei', 'ei'],
+            'condition': ['hyvä', 'hyvä', 'tyyd.'],
+            'plot_ownership':['oma', 'vuokra', 'oma'],
+            'postal_code':['00100', '02740', '00740'],
+            'floors':[7, 2, 2],
+            'current_floor':[3, 2, 2],
+            'floor_ratio':[3/7, 1, 1]}
 
 
-sqm_prices = list(pipeline.predict(known_apartments))
-total_prices = list(sqm_prices * known_apartments['sqm'])
-print(f"SQM prices: {sqm_prices}")
-print(f"Total prices: {total_prices}")
+
+    known_apts_names = ['mathias', 'harry', 'phki']
+
+    known_apartments = pd.DataFrame.from_dict(known_apts)
+
+
+    sqm_prices = list(pipeline.predict(known_apartments))
+    total_prices = list(sqm_prices * known_apartments['sqm'])
+    print(f"SQM prices: {sqm_prices}")
+    print(f"Total prices: {total_prices}")
