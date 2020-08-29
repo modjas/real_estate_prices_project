@@ -47,7 +47,7 @@ def run_train_test_lgbm():
     return score, CV_lgbm.best_params_
 
 
-def run_hyperparameter_optimisation(df, pipeline, parameters, n_iter=100):
+def hyperparameter_optimisation(df, pipeline, parameters, n_iter=100):
     print(f"Running train on {pipeline.named_steps['model']}")
     features_train, features_test, labels_train, labels_test = red.load_train_test(df)
 
@@ -66,35 +66,57 @@ def run_hyperparameter_optimisation(df, pipeline, parameters, n_iter=100):
     return pipeline, score, CV.best_params_
   
 
+def run_hyperparameter_optimisation(df):
 
-filename = './apartment_prices.csv'
+    pipelines = mp.lgbm_pipeline(), mp.random_forest_pipeline()
+    hyperparameters = mp.lgbm_hyperparameters(), mp.random_forest_hyperparameters()
+    n_iter = [100, 10]
 
-if not os.path.isfile(filename):
-    red.download_apartment_data(filename=filename)
+    results = {}
+    for i in range(len(pipelines)):
+        model = pipelines[i].named_steps['model']
+        pipeline = pipelines[i]
+        parameters = hyperparameters[i]
+        n = n_iter[i]
+        print(f"Run hyperparameter optimisation on {model}")
 
-df = pd.read_csv(filename)
+        pipeline, score, params = hyperparameter_optimisation(df,pipeline, parameters, n_iter=n)
 
-df = red.preprocess_data(df)
+        results[model] = {'pipeline': pipeline,
+                        'score': score,
+                        'parameters': params}
 
-pipelines = mp.lgbm_pipeline(), mp.random_forest_pipeline()
-hyperparameters = mp.lgbm_hyperparameters(), mp.random_forest_hyperparameters()
-n_iter = [100, 10]
+    for key in results:
+        model = str(key).split('(')[0]
+        score = results[key]['score']
+        print(f"{model}: {score}\n")
 
-results = {}
-for i in range(len(pipelines)):
-    model = pipelines[i].named_steps['model']
-    pipeline = pipelines[i]
-    parameters = hyperparameters[i]
-    n = n_iter[i]
-    print(f"Run hyperparameter optimisation on {model}")
-
-    pipeline, score, params = run_hyperparameter_optimisation(df,pipeline, parameters, n_iter=n)
-
-    results[model] = {'pipeline': pipeline,
-                       'score': score,
-                       'parameters': params}
-
+    return results
 
 
-print(results)
+
+if __name__ == '__main__':
+    filename = './apartment_prices.csv'
+
+    if not os.path.isfile(filename):
+        red.download_apartment_data(filename=filename)
+
+    df = pd.read_csv(filename, dtype={'postal_code': np.object})
+
+    df = red.preprocess_data(df)
+
+    features_train, features_test, labels_train, labels_test = red.load_train_test(df)
+    #run_hyperparameter_optimisation(df)
+    lgbm = mp.lgbm_pipeline()
+
+    lgbm.fit(features_train, labels_train)
+    print(lgbm.score(features_test, labels_test))
+
+
+    #Retrain with all data
+    features_train, _, labels_train, _ = red.load_train_test(df, test_size=0.01)
+    lgbm.fit(features_train, labels_train)
+    joblib.dump(lgbm, 'lgbm_pipeline.pkl')
+
+
     

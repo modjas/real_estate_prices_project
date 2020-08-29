@@ -42,17 +42,25 @@ def set_preprocessor():
 
 def lgbm_pipeline():
     preprocessor = set_preprocessor()
-    model = LGBMRegressor()
+    best_params = {'learning_rate': 0.21544346900318823,
+                    'max_depth': 128,
+                    'min_data_in_leaf': 2,
+                    'num_leaves': 16}
+    model = LGBMRegressor(**best_params)
 
     lgbm_pipeline = Pipeline(steps=[('preprocessor', preprocessor),
-                                    ('model', LGBMRegressor())])
+                                    ('model', model)])
 
     return lgbm_pipeline
 
 
 def random_forest_pipeline():
     preprocessor = set_preprocessor()
-    model = RandomForestRegressor(n_estimators=100)
+    best_params = {'max_depth':50,
+                    'max_features': 'sqrt',
+                    'min_samples_split': 5,
+                    'n_estimators': 120}
+    model = RandomForestRegressor(**best_params)
 
     random_forest_pipeline = Pipeline(steps=[('preprocessor', preprocessor),
                                             ('model', model)])
