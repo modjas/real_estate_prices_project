@@ -17,6 +17,4 @@ version: 2.1
 workflows:
   heroku_deploy:
     jobs:
-      - heroku/deploy-via-git:
-          pre-steps:
-            - run: docker build -t mathiassmeds/real_estate_project .
+      - heroku/deploy-via-git
