@@ -1,7 +1,7 @@
 FROM continuumio/miniconda3
 WORKDIR /app
 COPY main.py ./main.py
-COPY test.pkl ./test.pkl
+COPY lgbm_pipeline.pkl ./lgbm_pipeline.pkl
 #COPY environment.yml ./environment.yml
 #RUN conda env create -f environment.yml
 
@@ -13,4 +13,5 @@ RUN conda install -c conda-forge lightgbm
 
 COPY startup.sh startup.sh
 
-ENTRYPOINT "./startup.sh"
+#ENTRYPOINT "./startup.sh"
+CMD ["streamlit", "run", "main.py"]
