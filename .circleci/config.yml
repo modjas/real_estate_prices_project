@@ -19,4 +19,4 @@ workflows:
     jobs:
       - heroku/deploy-via-git:
           pre-steps:
-            - run: docker build -t mathiassmeds/real_estate_project
+            - run: docker build -t mathiassmeds/real_estate_project .
