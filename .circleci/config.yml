@@ -17,4 +17,6 @@ version: 2.1
 workflows:
   heroku_deploy:
     jobs:
-      - heroku/deploy-via-git
+      - heroku/deploy-via-git:
+          pre-steps:
+            - run: heroku stack:set heroku-20
