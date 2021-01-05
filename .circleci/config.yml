@@ -17,4 +17,4 @@ version: 2.1
 workflows:
   heroku_deploy:
     jobs:
-      - heroku/push-docker-image
+      - heroku/deploy-via-git
