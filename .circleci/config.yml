@@ -1,14 +1,9 @@
 version: 2.1
 orbs:
-  heroku:circleci/heroku@1.2.3
-
+  docker: circleci/docker@1.0.0
 workflows:
-  heroky_deploy:
+  deploy:
     jobs:
-      - build
-      - heroku/deploy-via-git:
-        requires:
-          - build
-        filters:
-          branches:
-            only: heroku_ci
+      - docker/publish:
+          image: mathiassmeds/real_estate_project
+          tag: 'latest'
