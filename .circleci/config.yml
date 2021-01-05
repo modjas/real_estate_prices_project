@@ -1,20 +1,17 @@
-# version: 2.1
-# orbs:
-#   docker: circleci/docker@1.0.0
-#   heroku: circleci/heroku@1.2.3
-# workflows:
-#   deploy:
-#     jobs:
-#       - docker/publish:
-#           image: mathiassmeds/real_estate_project
-#           tag: 'latest'
-#       - heroku/push-docker-image:
-#           app-name: modjas-real-estate-project
-
-orbs:
-  heroku: circleci/heroku@1.2.3
 version: 2.1
+orbs:
+  docker: circleci/docker@1.0.0
+  heroku: circleci/heroku@1.2.3
 workflows:
-  heroku_deploy:
+  deploy:
     jobs:
-      - heroku/deploy-via-git
+      - heroku/push-docker-image:
+          app-name: modjas-real-estate-project
+
+#orbs:
+#  heroku: circleci/heroku@1.2.3
+#version: 2.1
+#workflows:
+#  heroku_deploy:
+#    jobs:
+#      - heroku/deploy-via-git
