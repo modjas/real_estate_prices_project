@@ -6,6 +6,7 @@ COPY lgbm_pipeline.pkl ./lgbm_pipeline.pkl
 #RUN conda env create -f environment.yml
 
 COPY requirements_conda.txt ./requirements_conda.txt
+COPY heroku.yml ./heroku.yml
 
 RUN while read requirement; do conda install --yes $requirement; done < requirements_conda.txt
 RUN pip install streamlit
