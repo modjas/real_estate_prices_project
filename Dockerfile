@@ -1,4 +1,4 @@
-FROM continuumio/miniconda3
+FROM continuumio/miniconda3:4.6.14
 WORKDIR /app
 COPY main.py ./main.py
 COPY lgbm_pipeline.pkl ./lgbm_pipeline.pkl
