@@ -1,16 +1,13 @@
-FROM continuumio/miniconda3
+FROM continuumio/miniconda3:4.8.2
+
 WORKDIR /app
+EXPOSE 8501
+
 COPY main.py ./main.py
-COPY test.pkl ./test.pkl
-#COPY environment.yml ./environment.yml
-#RUN conda env create -f environment.yml
+COPY lgbm_pipeline.pkl ./lgbm_pipeline.pkl
 
-COPY requirements_conda.txt ./requirements_conda.txt
-
-RUN while read requirement; do conda install --yes $requirement; done < requirements_conda.txt
+RUN conda install pandas=1.0.5 joblib=0.16.0
 RUN pip install streamlit
 RUN conda install -c conda-forge lightgbm
 
-COPY startup.sh startup.sh
-
-ENTRYPOINT "./startup.sh"
+CMD ["streamlit", "run", "main.py"]
