@@ -5,13 +5,13 @@ EXPOSE 8501
 
 COPY main.py lgbm_pipeline.pkl ./
 
-RUN pip install pandas==1.0.5 streamlit lightgbm scikit-learn==0.23.1 && \
+RUN pip install pandas==1.0.5 streamlit==0.71.0 lightgbm scikit-learn==0.23.1 && \
     apt-get update && apt-get install libgomp1 && \
-    useradd -m realestate && \
-    chown -R realestate /app && \
-    chmod -R u+x /app && \
+#    useradd -m realestate && \
+#    chown -R realestate /app && \
+#    chmod -R u+x /app && \
     rm -rf /var/lib/apt/lists/*
 
-USER realestate
+#USER realestate
 
-CMD ["streamlit", "run", "main.py"]
+CMD ["sh", "-c", "streamlit run --server.port $PORT /app/main.py"]
